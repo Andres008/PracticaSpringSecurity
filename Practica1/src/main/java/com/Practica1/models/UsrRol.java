@@ -37,6 +37,15 @@ public class UsrRol implements Serializable {
 
 	public UsrRol() {
 	}
+	
+	
+
+	public UsrRol(Long idRol) {
+		super();
+		this.idRol = idRol;
+	}
+
+
 
 	public Long getIdRol() {
 		return this.idRol;

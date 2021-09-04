@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +25,9 @@ public class UsrUsuarioController {
 
 	private static final Logger logger = LoggerFactory.getLogger(UsrUsuarioController.class);
 	private UsrUsuarioService usrUsuarioService;
+	
+	@Autowired
+	private BCryptPasswordEncoder bcrypt;
 
 	public UsrUsuarioController(UsrUsuarioService usrUsuarioService) {
 		super();
@@ -46,7 +51,7 @@ public class UsrUsuarioController {
 				experiencia.setUsrUsuario(objUsrUsuario);
 			});
 			ModelUtil.passCheck(objUsrUsuario.getClave());
-			objUsrUsuario.setClave(ModelUtil.convMD5(objUsrUsuario.getClave()));
+			objUsrUsuario.setClave(bcrypt.encode(objUsrUsuario.getClave()));
 			return usrUsuarioService.ingresarNuevoUsuario(objUsrUsuario);
 		} catch (Exception e) {
 			logger.info("Error en el consumo del servicio guardar Rol. " + e.getMessage());

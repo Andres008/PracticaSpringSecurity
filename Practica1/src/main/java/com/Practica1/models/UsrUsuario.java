@@ -47,6 +47,25 @@ public class UsrUsuario implements Serializable {
 
 	public UsrUsuario() {
 	}
+	
+	
+
+	public UsrUsuario(String idUsuario, String apellido, String clave, String direccion, String email, String estado,
+			String nombre, String telefono, UsrRol usrRol, List<UsrUsuarioExperiencia> usrUsuarioExperiencias) {
+		super();
+		this.idUsuario = idUsuario;
+		this.apellido = apellido;
+		this.clave = clave;
+		this.direccion = direccion;
+		this.email = email;
+		this.estado = estado;
+		this.nombre = nombre;
+		this.telefono = telefono;
+		this.usrRol = usrRol;
+		this.usrUsuarioExperiencias = usrUsuarioExperiencias;
+	}
+
+
 
 	public String getIdUsuario() {
 		return this.idUsuario;
