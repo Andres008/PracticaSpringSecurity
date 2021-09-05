@@ -21,6 +21,17 @@ public class ModelUtil {
 		return null;
 	}
 	
+	public static boolean verificarCadenaVacio(String cadena) {
+		return cadena.isEmpty();
+	}
+	
+	public static boolean verificarObjetoVacio(Object object) {
+		if (object==null)
+			return true;
+		else
+			return false;
+	}
+	
 	public static void passCheck(String password) throws Exception {
 		int length = 0; // Almacenamos numero de caracteres en el pass
 		int numCount = 0; // Variable usada para almacenar numeros en el password

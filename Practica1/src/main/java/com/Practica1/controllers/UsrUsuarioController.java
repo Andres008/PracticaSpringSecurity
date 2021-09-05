@@ -2,6 +2,8 @@ package com.Practica1.controllers;
 
 import java.util.List;
 
+import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
+import org.hibernate.tool.schema.internal.ExceptionHandlerHaltImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,7 @@ public class UsrUsuarioController {
 
 	private static final Logger logger = LoggerFactory.getLogger(UsrUsuarioController.class);
 	private UsrUsuarioService usrUsuarioService;
-	
+
 	@Autowired
 	private BCryptPasswordEncoder bcrypt;
 
@@ -45,27 +47,47 @@ public class UsrUsuarioController {
 	}
 
 	@PostMapping(produces = "application/json")
-	public UsrUsuario guardarRol(@RequestBody @Validated UsrUsuario objUsrUsuario) throws Exception {
+	public String guardarRol(@RequestBody @Validated UsrUsuario objUsrUsuario) {
 		try {
+			if (usrUsuarioService.buscarUsuarioExisten(objUsrUsuario) != null)
+				throw new Exception("101");
+			validacionObjUsrUsuario(objUsrUsuario);
 			objUsrUsuario.getUsrUsuarioExperiencias().forEach(experiencia -> {
 				experiencia.setUsrUsuario(objUsrUsuario);
 			});
-			ModelUtil.passCheck(objUsrUsuario.getClave());
-			objUsrUsuario.setClave(bcrypt.encode(objUsrUsuario.getClave()));
-			return usrUsuarioService.ingresarNuevoUsuario(objUsrUsuario);
+			verificarClave(objUsrUsuario);
+			usrUsuarioService.ingresarNuevoUsuario(objUsrUsuario);
+			return "100";
 		} catch (Exception e) {
-			logger.info("Error en el consumo del servicio guardar Rol. " + e.getMessage());
-			throw new Exception(e.getMessage());
+			logger.info("Error en el consumo del servicio guardar Usuario. " + e.getMessage());
+			return e.getMessage();
 		}
 	}
 
+	public void verificarClave(UsrUsuario objUsrUsuario) throws Exception {
+		ModelUtil.passCheck(objUsrUsuario.getClave());
+		objUsrUsuario.setClave(bcrypt.encode(objUsrUsuario.getClave()));
+	}
+
+	public void validacionObjUsrUsuario(UsrUsuario objUsrUsuario) throws Exception {
+		if (ModelUtil.verificarCadenaVacio(objUsrUsuario.getIdUsuario()))
+			throw new Exception("102");
+		if (ModelUtil.verificarCadenaVacio(objUsrUsuario.getClave()))
+			throw new Exception("103");
+		if (ModelUtil.verificarObjetoVacio(objUsrUsuario.getUsrRol()))
+			throw new Exception("104");
+	}
+
 	@PutMapping(produces = "application/json")
-	public UsrUsuario actualizarRol(@RequestBody @Validated UsrUsuario objUsrUsuario) throws Exception {
+	public String actualizarRol(@RequestBody @Validated UsrUsuario objUsrUsuario) throws Exception {
 		try {
-			return usrUsuarioService.actualizarUsuario(objUsrUsuario);
+			validacionObjUsrUsuario(objUsrUsuario);
+			verificarClave(objUsrUsuario);
+			usrUsuarioService.actualizarUsuario(objUsrUsuario);
+			return "105";
 		} catch (Exception e) {
-			logger.info("Error en el consumo del servicio guardar Rol. " + e.getMessage());
-			throw new Exception(e.getMessage());
+			logger.info("Error en el consumo del servicio actualizar Usuario. " + e.getMessage());
+			return e.getMessage();
 		}
 	}
 

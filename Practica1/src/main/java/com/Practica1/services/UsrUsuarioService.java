@@ -45,6 +45,10 @@ public class UsrUsuarioService implements UserDetailsService {
 		usrUsuarioRepository.delete(usrUsuario);
 	}
 	
+	public UsrUsuario buscarUsuarioExisten( UsrUsuario usrUsuario ) {
+		return usrUsuarioRepository.findByIdUsuario(usrUsuario.getIdUsuario());
+	}
+	
 	@Override
 	public UserDetails loadUserByUsername(String username)throws UsernameNotFoundException {
 		UsrUsuario usuario = usrUsuarioRepository.findByIdUsuario(username);
