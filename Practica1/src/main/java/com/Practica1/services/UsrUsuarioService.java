@@ -33,6 +33,12 @@ public class UsrUsuarioService implements UserDetailsService {
 		return (List<UsrUsuario>) usrUsuarioRepository.findAll();
 	}
 	
+	public boolean buscarUsuarioById( UsrUsuario objUsrUsuario ) {
+		if (usrUsuarioRepository.existsById(objUsrUsuario.getIdUsuario()))	
+			return true;
+		return false;
+	}
+	
 	public UsrUsuario ingresarNuevoUsuario(UsrUsuario usrUsuario) {
 		return usrUsuarioRepository.save(usrUsuario);		
 	}

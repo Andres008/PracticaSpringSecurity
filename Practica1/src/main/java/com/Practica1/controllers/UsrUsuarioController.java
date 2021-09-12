@@ -79,15 +79,11 @@ public class UsrUsuarioController {
 	}
 
 	@PutMapping(produces = "application/json")
-	public String actualizarRol(@RequestBody @Validated UsrUsuario objUsrUsuario) throws Exception {
+	public boolean verificarUsuarioExistente(@RequestBody @Validated UsrUsuario objUsrUsuario) throws Exception {
 		try {
-			validacionObjUsrUsuario(objUsrUsuario);
-			verificarClave(objUsrUsuario);
-			usrUsuarioService.actualizarUsuario(objUsrUsuario);
-			return "105";
+		return usrUsuarioService.buscarUsuarioById(objUsrUsuario);
 		} catch (Exception e) {
-			logger.info("Error en el consumo del servicio actualizar Usuario. " + e.getMessage());
-			return e.getMessage();
+			return false;
 		}
 	}
 
